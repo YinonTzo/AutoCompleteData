@@ -1,16 +1,20 @@
-# This is a sample Python script.
+import os
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    wordDict = {}
+    for root, dirs, files in os.walk('resources'):
+        for file in files:
+            print(os.path.abspath(os.path.join(root, file)))
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+
+    """   f = open(file, "r")
+            for line in f:
+                for word in line:
+                    if word not in wordDict.keys():
+                        wordDict[word] = []
+                    wordDict[word].append(line)
+    print(wordDict)
+    """
+
+
