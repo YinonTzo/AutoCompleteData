@@ -6,6 +6,7 @@ if __name__ == '__main__':
         for file in files:
             print(os.path.abspath(os.path.join(root, file)))
 
+
     """   f = open(file, "r")
             for line in f:
                 for word in line:
