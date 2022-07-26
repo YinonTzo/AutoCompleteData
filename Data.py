@@ -31,4 +31,10 @@ class Data:
                             word = word.lower()
                             if word not in word_to_sentence.keys():
                                 word_to_sentence[word] = set()
-                            word_to_sentence[word].add(line)  # add the line to the key word
+                            word_to_sentence[word].add(len(sentence_to_file)-1)  # add the line to the key word
+
+    def get_data_word_to_sentence(self, word) -> set[int]:
+        return self.word_to_sentence[word]
+
+    def get_data_sentence_to_file(self, index) -> list[Sentence]:
+        return self.sentence_to_file[index]
