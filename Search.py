@@ -1,16 +1,18 @@
 import AutoCompleteData
-import Data
+from Data import Data
+
 
 def get_best_k_completions(prefix: str) -> list[AutoCompleteData]:
     results = []
-    data = get_data()
     prefix = prefix.lower()
     user_search_list = prefix.split(" ")
-    for result in data[user_search_list[0]]:
-        if result[0].lower().find(prefix) != -1:
-            results.append(AutoCompleteData(prefix, result[0], result[1], 0, result[2]))
+    for sentence in data.get_data_word_to_sentence(user_search_list[0]):
+        for result in sentence:
+            kkk = data.get_data_sentence_to_file(results)
             if len(results) == 5:
                 break
+            if kkk.get_sentence().lower().find(prefix) != -1:
+                results.append(AutoCompleteData(prefix, kkk.get_sentence(), kkk.get_line(), 0, kkk.get_file_name()))
     return results
 
 def print_user_input() -> None:
@@ -19,4 +21,5 @@ def print_user_input() -> None:
     for result in get_best_k_completions(user_search):
         print(counter++ + '. ' + result)
 
+data = Data()
 print_user_input()
