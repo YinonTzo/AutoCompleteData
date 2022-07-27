@@ -2,8 +2,6 @@ import os
 
 
 class Sentence:
-
-
     def __init__(self, sentence, file_name, line):
         self.sentence = sentence
         self.file_name = file_name
@@ -20,7 +18,7 @@ class Sentence:
 
 
 class Data:
-    word_to_sentence: dict[set[int]]
+    word_to_sentence: dict[str, set[int]]
     sentence_to_file: list[Sentence]
 
     def __init__(self):
@@ -38,7 +36,7 @@ class Data:
                     line_num = 0
                     for line in f:
                         line_num += 1
-                        self.sentence_to_file.append(Sentence(line, file[:-4], line_num))
+                        self.sentence_to_file.append(Sentence(line[:-1], file[:-4], line_num))
                         for word in line.split(" "):  # every word separated by space
                             word = word.lower()
                             if word not in self.word_to_sentence.keys():
