@@ -4,7 +4,6 @@ from Data import Sentence
 
 def get_best_k_completions(input : str) -> list[str]:
     """
-
     :param input:
     :return:
     """
@@ -42,7 +41,6 @@ def get_best_k_completions(input : str) -> list[str]:
 
 def get_perfect_match(prefix: str) -> list[AutoCompleteData]:
     """
-
     :param prefix:
     :return:
     """
