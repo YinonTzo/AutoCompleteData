@@ -2,10 +2,9 @@ import os
 
 
 class Sentence:
-    def __init__(self, sentence, file_name, line):
+    def __init__(self, sentence, file_name):
         self.sentence = sentence
         self.file_name = file_name
-        self.line = line
 
     def get_sentence(self):
         return self.sentence
@@ -18,8 +17,6 @@ class Sentence:
 
 
 class Data:
-    word_to_sentence: dict[str, set[int]]
-    sentence_to_file: list[Sentence]
 
     def __init__(self):
         """
@@ -29,17 +26,15 @@ class Data:
         """
         self.word_to_sentence = dict()
         self.sentence_to_file = list()
-        for root, dirs, files in os.walk('Resources'):
+        for root, dirs, files in os.walk('stam'):
             for file in files:  # get each file within the directory and subdirectories
                 path = (os.path.abspath(os.path.join(root, file)))  # get the full path of each file
                 with open(path, encoding="utf8") as f:  # open the file
-                    line_num = 0
                     for line in f:
-                        line_num += 1
-                        self.sentence_to_file.append(Sentence(line[:-1], file[:-4], line_num))
-                        for word in line.split(" "):  # every word separated by space
+                        self.sentence_to_file.append(Sentence(line[:-1], file[:-4]))
+                        for word in line.replace('\n', "").split(" "):  # every word separated by space
                             word = word.lower()
-                            if word not in self.word_to_sentence.keys():
+                            if word not in self.word_to_sentence:
                                 self.word_to_sentence[word] = set()
                             self.word_to_sentence[word].add(len(self.sentence_to_file)-1)  # add the line to the key word
 
