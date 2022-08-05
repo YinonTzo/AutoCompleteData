@@ -1,29 +1,16 @@
 import os
-
-
-class Sentence:
-    def __init__(self, sentence, file_name):
-        self.sentence = sentence
-        self.file_name = file_name
-
-    def get_sentence(self):
-        return self.sentence
-
-    def get_file_name(self):
-        return self.file_name
-
-    def get_line(self):
-        return self.line
+import Sentence
 
 
 class Data:
+    """
+    A Data class. Keep the data from Archive.
 
+    Attributes:
+        word_to_sentence (dict): Map any word to its sentence.
+        sentence_to_file (list): Save the sentences.
+    """
     def __init__(self):
-        """
-        Read all the files from the Resources.
-        :return:A dictionary which each key is a word inside a file,
-        and for each word a list of number of lines where contain this word.
-        """
         self.word_to_sentence = dict()
         self.sentence_to_file = list()
         for root, dirs, files in os.walk('stam'):
@@ -31,7 +18,7 @@ class Data:
                 path = (os.path.abspath(os.path.join(root, file)))  # get the full path of each file
                 with open(path, encoding="utf8") as f:  # open the file
                     for line in f:
-                        self.sentence_to_file.append(Sentence(line[:-1], file[:-4]))
+                        self.sentence_to_file.append(Sentence.Sentence(line[:-1], file[:-4]))
                         for word in line.replace('\n', "").split(" "):  # every word separated by space
                             word = word.lower()
                             if word not in self.word_to_sentence:
