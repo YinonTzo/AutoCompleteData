@@ -1,10 +1,12 @@
 
-import Search
+import Searcher
 
 
 def main():
+    searcher = Searcher.Searcher()
+
     prefix = "line in"
-    for i, completion in enumerate(Search.get_best_k_completions(prefix)):
+    for i, completion in enumerate(searcher.get_best_k_completions(prefix)):
         print(str(i) + '. ' + str(completion))
 
 

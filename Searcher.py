@@ -2,51 +2,51 @@ from AutoCompleteData import AutoCompleteData
 import Data
 import Sentence
 
-data = Data.Data()
 
+class Searcher:
 
-def get_best_k_completions(prefix: str) -> list[AutoCompleteData]:
-    misspelled_words_counter, misspelled_word, intersection_of_lines = find_perfect_match(prefix)
-    if misspelled_words_counter == 0:
-        return find_complete_sentence(prefix, intersection_of_lines)[:5]
-    # elif misspelled_words_counter == 1:
-    #     Search.try_to_fix_word(prefix, misspelled_word, intersection_of_lines)
+    def __init__(self):
+        self.data = Data.Data()
 
+    def get_best_k_completions(self, prefix: str) -> list[AutoCompleteData]:
+        misspelled_words_counter, misspelled_word, intersection_of_lines = self.find_perfect_match(prefix)
+        if misspelled_words_counter == 0:
+            return self.find_complete_sentence(prefix, intersection_of_lines)[:5]
+        # elif misspelled_words_counter == 1:
+        #     Search.try_to_fix_word(prefix, misspelled_word, intersection_of_lines)
 
-def find_perfect_match(prefix: str) -> tuple[int, str, set[int]]:
-    intersection_of_lines = set()
-    misspelled_words_counter = 0
-    misspelled_word = ''
-    prefix_list = prefix.lower().split(" ")
-    for word in prefix_list:
-        numbers_of_lines = data.get_data_word_to_sentence(word)
-        if numbers_of_lines:
-            intersection_of_lines = make_intersection(intersection_of_lines, numbers_of_lines)
+    def find_perfect_match(self, prefix: str) -> tuple[int, str, set[int]]:
+        intersection_of_lines = set()
+        misspelled_words_counter = 0
+        misspelled_word = ''
+        prefix_list = prefix.lower().split(" ")
+        for word in prefix_list:
+            numbers_of_lines = self.data.get_data_word_to_sentence(word)
+            if numbers_of_lines:
+                intersection_of_lines = self.make_intersection(intersection_of_lines, numbers_of_lines)
+            else:
+                misspelled_words_counter += 1
+                misspelled_word = word
+
+        return misspelled_words_counter, misspelled_word, intersection_of_lines
+
+    def make_intersection(self, intersection_of_lines: set[int], numbers_of_lines: set[int]) -> set[int]:
+        if intersection_of_lines:
+            intersection_of_lines = intersection_of_lines.intersection(numbers_of_lines)
         else:
-            misspelled_words_counter += 1
-            misspelled_word = word
+            intersection_of_lines = numbers_of_lines
+        return intersection_of_lines
 
-    return misspelled_words_counter, misspelled_word, intersection_of_lines
-
-
-def make_intersection(intersection_of_lines: set[int], numbers_of_lines: set[int]) -> set[int]:
-    if intersection_of_lines:
-        intersection_of_lines = intersection_of_lines.intersection(numbers_of_lines)
-    else:
-        intersection_of_lines = numbers_of_lines
-    return intersection_of_lines
-
-
-def find_complete_sentence(prefix: str, intersection_of_lines: set[int]) -> list[AutoCompleteData]:
-    results = list()
-    for line in intersection_of_lines:
-        offset = data.get_data_sentence_to_file(line).get_sentence().find(prefix)
-        if offset != -1:
-            results.append(AutoCompleteData(
-                           data.get_data_sentence_to_file(line).get_sentence(),
-                           data.get_data_sentence_to_file(line).get_file_name(),
-                           offset, 0))
-    return results
+    def find_complete_sentence(self, prefix: str, intersection_of_lines: set[int]) -> list[AutoCompleteData]:
+        results = list()
+        for line in intersection_of_lines:
+            offset = self.data.get_data_sentence_to_file(line).get_sentence().find(prefix)
+            if offset != -1:
+                results.append(AutoCompleteData(
+                               self.data.get_data_sentence_to_file(line).get_sentence(),
+                               self.data.get_data_sentence_to_file(line).get_file_name(),
+                               offset, 0))
+        return results
 
 
 #     for id in numbers_of_lines:
