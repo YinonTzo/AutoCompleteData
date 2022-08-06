@@ -4,42 +4,13 @@ import Sentence
 
 data = Data.Data()
 
-def get_best_k_completions(input : str) -> list[str]:
-    """
-    :param input:
-    :return:
-    """
-    perfect_list = get_perfect_match(input)
-    perfect_list = list()
-    #perf_list = list()
-    max_score = 0
-    #if len(perfect_list) != 0:
-    input_by_words = input.split(" ")
-    for i in range(len(input_by_words)):
-        prefix = input_by_words[:i]
-        suffix = input_by_words[i+1:]
-        full_prefix_string = ' '.join(map(str, prefix))
-        full_suffix_string = ' '.join(map(str, suffix))
-        prefix_list = get_perfect_match(full_prefix_string)
-        suffix_list = get_perfect_match(full_suffix_string)
-        if len(prefix_list) == 0 or len(suffix_list) == 0:
-            continue
 
-        prefix_set = get_id_set(prefix_list)
-        suffix_set = get_id_set(suffix_list)
-        possible_match_list = prefix_set.intersection(suffix_set)
-        for id in possible_match_list:
-            sentence = data.get_data_sentence_to_file(id).get_sentence()
-            sentence = sentence.lower()
-            prefix_index = sentence.find(' ' + full_prefix_string.lower() + ' ')
-            suffix_index = sentence.find(' ' + full_suffix_string.lower() + ' ')
-            if prefix_index < suffix_index:
-                fix_parameters = fix_words(input_by_words[i], sentence[prefix_index + len(full_prefix_string) + 2: suffix_index])
-                if fix_parameters[0] is True:
-                    perfect_list.append(sentence)
-                if len(perfect_list) == 5:
-                    return perfect_list
-    return perfect_list
+def get_best_k_completions(prefix: str) -> list[AutoCompleteData]:
+    misspelled_words_counter, misspelled_word, intersection_of_lines = find_perfect_match(prefix)
+    if misspelled_words_counter == 0:
+        return find_complete_sentence(prefix, intersection_of_lines)[:5]
+    # elif misspelled_words_counter == 1:
+    #     Search.try_to_fix_word(prefix, misspelled_word, intersection_of_lines)
 
 
 def find_perfect_match(prefix: str) -> tuple[int, str, set[int]]:
@@ -85,6 +56,44 @@ def find_complete_sentence(prefix: str, intersection_of_lines: set[int]) -> list
 #             results.append(AutoCompleteData(id, prefix, sentence.get_sentence(), sentence.get_line(), 0, sentence.get_file_name()))
 
 #def get_score(sentence: str, list: list[bool, ])
+
+#
+# def get_best_k_completions(input : str) -> list[str]:
+#     """
+#     :param input:
+#     :return:
+#     """
+#     perfect_list = get_perfect_match(input)
+#     perfect_list = list()
+#     #perf_list = list()
+#     max_score = 0
+#     #if len(perfect_list) != 0:
+#     input_by_words = input.split(" ")
+#     for i in range(len(input_by_words)):
+#         prefix = input_by_words[:i]
+#         suffix = input_by_words[i+1:]
+#         full_prefix_string = ' '.join(map(str, prefix))
+#         full_suffix_string = ' '.join(map(str, suffix))
+#         prefix_list = get_perfect_match(full_prefix_string)
+#         suffix_list = get_perfect_match(full_suffix_string)
+#         if len(prefix_list) == 0 or len(suffix_list) == 0:
+#             continue
+#
+#         prefix_set = get_id_set(prefix_list)
+#         suffix_set = get_id_set(suffix_list)
+#         possible_match_list = prefix_set.intersection(suffix_set)
+#         for id in possible_match_list:
+#             sentence = data.get_data_sentence_to_file(id).get_sentence()
+#             sentence = sentence.lower()
+#             prefix_index = sentence.find(' ' + full_prefix_string.lower() + ' ')
+#             suffix_index = sentence.find(' ' + full_suffix_string.lower() + ' ')
+#             if prefix_index < suffix_index:
+#                 fix_parameters = fix_words(input_by_words[i], sentence[prefix_index + len(full_prefix_string) + 2: suffix_index])
+#                 if fix_parameters[0] is True:
+#                     perfect_list.append(sentence)
+#                 if len(perfect_list) == 5:
+#                     return perfect_list
+#     return perfect_list
 
 
 def get_id_set(li :list[AutoCompleteData]) -> set[int]:
