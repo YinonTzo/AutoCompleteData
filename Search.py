@@ -1,6 +1,8 @@
 from AutoCompleteData import AutoCompleteData
-from Data import Data
-from Data import Sentence
+import Data
+import Sentence
+
+data = Data.Data()
 
 def get_best_k_completions(input : str) -> list[str]:
     """
@@ -39,39 +41,50 @@ def get_best_k_completions(input : str) -> list[str]:
                     return perfect_list
     return perfect_list
 
-def get_perfect_match(prefix: str) -> list[AutoCompleteData]:
-    """
-    :param prefix:
-    :return:
-    """
-    results = []
-    prefix = prefix.lower()
-    user_search_list = prefix.split(" ")
-    for id in data.get_data_word_to_sentence(user_search_list[0]):
-    #for id in make_intersection(user_search_list):
-        sentence = data.get_data_sentence_to_file(id)
-        if sentence.get_sentence().lower().find(prefix) != -1:
-            results.append(AutoCompleteData(id, prefix, sentence.get_sentence(), sentence.get_line(), 0, sentence.get_file_name()))
+
+def find_perfect_match(prefix: str) -> tuple[int, str, set[int]]:
+    intersection_of_lines = set()
+    misspelled_words_counter = 0
+    misspelled_word = ''
+    prefix_list = prefix.lower().split(" ")
+    for word in prefix_list:
+        numbers_of_lines = data.get_data_word_to_sentence(word)
+        if numbers_of_lines:
+            intersection_of_lines = make_intersection(intersection_of_lines, numbers_of_lines)
+        else:
+            misspelled_words_counter += 1
+            misspelled_word = word
+
+    return misspelled_words_counter, misspelled_word, intersection_of_lines
+
+
+def make_intersection(intersection_of_lines: set[int], numbers_of_lines: set[int]) -> set[int]:
+    if intersection_of_lines:
+        intersection_of_lines = intersection_of_lines.intersection(numbers_of_lines)
+    else:
+        intersection_of_lines = numbers_of_lines
+    return intersection_of_lines
+
+
+def find_complete_sentence(prefix: str, intersection_of_lines: set[int]) -> list[AutoCompleteData]:
+    results = list()
+    for line in intersection_of_lines:
+        offset = data.get_data_sentence_to_file(line).get_sentence().find(prefix)
+        if offset != -1:
+            results.append(AutoCompleteData(
+                           data.get_data_sentence_to_file(line).get_sentence(),
+                           data.get_data_sentence_to_file(line).get_file_name(),
+                           offset, 0))
     return results
 
 
+#     for id in numbers_of_lines:
+#     #for id in make_intersection(prefix_list):
+#         sentence = data.get_data_sentence_to_file(id)
+#         if sentence.get_sentence().lower().find(prefix) != -1:
+#             results.append(AutoCompleteData(id, prefix, sentence.get_sentence(), sentence.get_line(), 0, sentence.get_file_name()))
+
 #def get_score(sentence: str, list: list[bool, ])
-
-
-def make_intersection(list_words: list[str]) -> set[int]:
-    mistake_words = 0
-    #mistake_in_word = ""
-    set_intersection = data.get_data_word_to_sentence(list_words[0])
-    for word in list_words:
-        sentences = data.get_data_word_to_sentence(word)
-        """if len(sentences) == 0:
-            mistake_words += 1
-            mistake_in_word = word
-            if mistake_words > 1:
-                return set()"""
-        #else:
-        set_intersection = set_intersection.intersection(sentences)
-    return set_intersection
 
 
 def get_id_set(li :list[AutoCompleteData]) -> set[int]:
@@ -170,6 +183,3 @@ def fix_words(target_word: str, wanted_word: str) -> list:
     return [False, 0, 0]
 
 
-
-data = Data()
-print_user_input()

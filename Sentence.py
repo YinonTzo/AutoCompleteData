@@ -20,6 +20,4 @@ class Sentence:
     def get_file_name(self):
         return self.file_name
 
-    def get_line(self):
-        return self.line
 
