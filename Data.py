@@ -7,9 +7,10 @@ class Data:
     A Data class. Keep the data from Archive.
 
     Attributes:
-        word_to_sentence (dict): Map any word to its sentence.
+        word_to_sentence (dict): Map word to its sentence.
         sentence_to_file (list): Save the sentences.
     """
+
     def __init__(self):
         self.word_to_sentence = dict()
         self.sentence_to_file = list()
@@ -23,12 +24,23 @@ class Data:
                             word = word.lower()
                             if word not in self.word_to_sentence:
                                 self.word_to_sentence[word] = set()
-                            self.word_to_sentence[word].add(len(self.sentence_to_file)-1)  # add the line to the key word
+                            self.word_to_sentence[word].add(
+                                len(self.sentence_to_file) - 1)  # add the line to the key word
 
-    def get_data_word_to_sentence(self, word) -> set[int]:
+    def get_lines_from_word_to_sentence(self, word: str) -> set[int]:
+        """
+        Check if the word exists, return the sentence that it belong.
+        :param word: Word from sentence.
+        :return: A set of sentences that this word exists.
+        """
         if word not in self.word_to_sentence:
             return None
         return self.word_to_sentence[word]
 
-    def get_data_sentence_to_file(self, index) -> Sentence:
+    def get_sentence_to_file(self, index) -> Sentence:
+        """
+        Return the complete sentence.
+        :param index: Where the sentence exists.
+        :return: A Sentence from the list.
+        """
         return self.sentence_to_file[index]

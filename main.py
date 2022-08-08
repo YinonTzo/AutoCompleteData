@@ -5,7 +5,8 @@ import Searcher
 def main():
     searcher = Searcher.Searcher()
 
-    prefix = "first lime"
+    # prefix = "fist line" bug
+    prefix = "first line"
     for i, completion in enumerate(searcher.get_best_k_completions(prefix)):
         print(str(i) + '. ' + str(completion))
 

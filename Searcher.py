@@ -1,8 +1,5 @@
-from typing import Tuple, Set, Any
-
 from AutoCompleteData import AutoCompleteData
 import Data
-import Sentence
 
 
 class Searcher:
@@ -27,7 +24,7 @@ class Searcher:
 
         prefix_list = prefix.lower().split(" ")
         for i, word in enumerate(prefix_list):
-            numbers_of_lines = self.data.get_data_word_to_sentence(word)
+            numbers_of_lines = self.data.get_lines_from_word_to_sentence(word)
             if numbers_of_lines:
                 intersection_of_lines = self.make_intersection(intersection_of_lines, numbers_of_lines)
             else:
@@ -47,11 +44,11 @@ class Searcher:
     def find_complete_sentence(self, prefix: str, intersection_of_lines: set[int]) -> list[AutoCompleteData]:
         results = list()
         for line in intersection_of_lines:
-            offset = self.data.get_data_sentence_to_file(line).get_sentence().find(prefix)
+            offset = self.data.get_sentence_to_file(line).get_sentence().find(prefix)
             if offset != -1:
                 results.append(AutoCompleteData(
-                    self.data.get_data_sentence_to_file(line).get_sentence(),
-                    self.data.get_data_sentence_to_file(line).get_file_name(),
+                    self.data.get_sentence_to_file(line).get_sentence(),
+                    self.data.get_sentence_to_file(line).get_file_name(),
                     offset, 0))
         return results
 
@@ -62,7 +59,7 @@ class Searcher:
 
         fix_sentences = list()
         for line in intersection_of_lines:
-            split_sentence = self.data.get_data_sentence_to_file(line).get_sentence().split(" ")
+            split_sentence = self.data.get_sentence_to_file(line).get_sentence().split(" ")
 
             first_match_index = split_sentence.index(prefix[0])
             real_word_index = first_match_index + len(prefix)
@@ -71,8 +68,8 @@ class Searcher:
                     self.check_pattern_match(real_word_index + 1, split_sentence, suffix):
                 if self.fix_word(misspelled_word, split_sentence[real_word_index]):
                     fix_sentences.append(AutoCompleteData(
-                        self.data.get_data_sentence_to_file(line).get_sentence(),
-                        self.data.get_data_sentence_to_file(line).get_file_name(),
+                        self.data.get_sentence_to_file(line).get_sentence(),
+                        self.data.get_sentence_to_file(line).get_file_name(),
                         0, 0))
                 elif len(suffix) == 0:  # it means that all the words are ok but the last.
                     return self.find_complete_sentence(user_input, intersection_of_lines)[:5]
