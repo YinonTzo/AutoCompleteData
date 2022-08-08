@@ -1,3 +1,5 @@
+from typing import Tuple, Set, Any
+
 from AutoCompleteData import AutoCompleteData
 import Data
 import Sentence
@@ -9,26 +11,31 @@ class Searcher:
         self.data = Data.Data()
 
     def get_best_k_completions(self, prefix: str) -> list[AutoCompleteData]:
-        misspelled_words_counter, misspelled_word, intersection_of_lines = self.find_perfect_match(prefix)
+        misspelled_words_counter, misspelled_word, misspelled_word_place, \
+            intersection_of_lines, = self.find_perfect_match(prefix)
+
         if misspelled_words_counter == 0:
             return self.find_complete_sentence(prefix, intersection_of_lines)[:5]
-        # elif misspelled_words_counter == 1:
-        #     Search.try_to_fix_word(prefix, misspelled_word, intersection_of_lines)
+        elif misspelled_words_counter == 1:
+            return self.find_real_word(prefix, misspelled_word, misspelled_word_place, intersection_of_lines)
 
-    def find_perfect_match(self, prefix: str) -> tuple[int, str, set[int]]:
+    def find_perfect_match(self, prefix: str) -> tuple[int, str, int, set[int]]:
         intersection_of_lines = set()
         misspelled_words_counter = 0
+        misspelled_word_place = 0
         misspelled_word = ''
+
         prefix_list = prefix.lower().split(" ")
-        for word in prefix_list:
+        for i, word in enumerate(prefix_list):
             numbers_of_lines = self.data.get_data_word_to_sentence(word)
             if numbers_of_lines:
                 intersection_of_lines = self.make_intersection(intersection_of_lines, numbers_of_lines)
             else:
+                misspelled_word_place = i
                 misspelled_words_counter += 1
                 misspelled_word = word
 
-        return misspelled_words_counter, misspelled_word, intersection_of_lines
+        return misspelled_words_counter, misspelled_word, misspelled_word_place, intersection_of_lines
 
     def make_intersection(self, intersection_of_lines: set[int], numbers_of_lines: set[int]) -> set[int]:
         if intersection_of_lines:
@@ -43,10 +50,49 @@ class Searcher:
             offset = self.data.get_data_sentence_to_file(line).get_sentence().find(prefix)
             if offset != -1:
                 results.append(AutoCompleteData(
-                               self.data.get_data_sentence_to_file(line).get_sentence(),
-                               self.data.get_data_sentence_to_file(line).get_file_name(),
-                               offset, 0))
+                    self.data.get_data_sentence_to_file(line).get_sentence(),
+                    self.data.get_data_sentence_to_file(line).get_file_name(),
+                    offset, 0))
         return results
+
+    def find_real_word(self, user_input, misspelled_word, misspelled_word_place, intersection_of_lines):
+        split_user_input = user_input.split(" ")
+        prefix = split_user_input[:misspelled_word_place]
+        suffix = split_user_input[misspelled_word_place + 1:]
+
+        for line in intersection_of_lines:
+            split_sentence = self.data.get_data_sentence_to_file(line).get_sentence().split(" ")
+
+            first_match_index = split_sentence.index(prefix[0])
+            real_word_index = first_match_index + len(prefix)
+
+            if self.check_pattern_match(first_match_index, split_sentence, prefix):
+                print("prefix match")
+            else:
+                print("prefix doesn't match")
+
+            if self.check_pattern_match(real_word_index + 1, split_sentence, suffix):
+                print("suffix match")
+            else:
+                print("suffix doesn't match")
+
+            self.try_to_fix_word(misspelled_word, split_sentence[real_word_index])
+
+        return []
+
+    def check_pattern_match(self, index, complete_sentence, partial_input):
+        if len(partial_input) > len(complete_sentence[index:]):
+            return False
+        if len(partial_input) == 0:
+            return True
+
+        for i in range(0, len(partial_input)):
+            if complete_sentence[index + i] != partial_input[i]:
+                return False
+        return True
+
+    def try_to_fix_word(self, misspelled_word, real_word):
+        pass
 
 
 #     for id in numbers_of_lines:
@@ -55,7 +101,7 @@ class Searcher:
 #         if sentence.get_sentence().lower().find(prefix) != -1:
 #             results.append(AutoCompleteData(id, prefix, sentence.get_sentence(), sentence.get_line(), 0, sentence.get_file_name()))
 
-#def get_score(sentence: str, list: list[bool, ])
+# def get_score(sentence: str, list: list[bool, ])
 
 #
 # def get_best_k_completions(input : str) -> list[str]:
@@ -96,7 +142,7 @@ class Searcher:
 #     return perfect_list
 
 
-def get_id_set(li :list[AutoCompleteData]) -> set[int]:
+def get_id_set(li: list[AutoCompleteData]) -> set[int]:
     sentence_id_set = set()
     for item in li:
         sentence_id_set.add(item.get_id())
@@ -121,6 +167,7 @@ def print_user_input() -> None:
                 print(str(counter) + ". " + result)
         print("\n")
 
+
 def fix_by_delete(target_word: str, wanted_word: str) -> str:
     """
     Find if it's possible to fix the target word to wanted word by delete only one of the letters.
@@ -141,7 +188,7 @@ def fix_by_add_letter(target_word: str, wanted_word: str) -> str:
     :param wanted_word: wanted word to fix the target word to
     :return:Index of the change in the target_word, -1 otherwise.
     """
-    if len(target_word)+1 != len(wanted_word):
+    if len(target_word) + 1 != len(wanted_word):
         return [False, 0, 0]
     if target_word[0] == wanted_word[0] and len(target_word) == 1:
         return [True, 1, 1]
@@ -190,5 +237,3 @@ def fix_words(target_word: str, wanted_word: str) -> list:
     if fix_index != -1:
         return [True, fix_index, 3]
     return [False, 0, 0]
-
-
