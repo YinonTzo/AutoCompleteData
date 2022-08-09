@@ -27,7 +27,7 @@ class Searcher:
         if misspelled_words_counter == 0:
             return self.find_complete_sentence(prefix, intersection_of_lines)[:5]
         elif misspelled_words_counter == 1:
-            return self.find_real_word(prefix, misspelled_word, misspelled_word_place, intersection_of_lines)
+            return self.find_real_word(prefix, misspelled_word, misspelled_word_place, intersection_of_lines)[:5]
         else:
             return "Only one mistake is allowed"
 
@@ -92,7 +92,7 @@ class Searcher:
                 elif len(suffix) == 0:  # it means that all the words are ok but the last.
                     return self.find_complete_sentence(user_input, intersection_of_lines)[:5]
 
-        return fixed_sentences[:5]
+        return fixed_sentences
 
     def check_pattern_match(self, index, complete_sentence, partial_input):
         if len(partial_input) > len(complete_sentence[index:]):
