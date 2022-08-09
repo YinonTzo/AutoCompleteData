@@ -15,6 +15,8 @@ class Searcher:
             return self.find_complete_sentence(prefix, intersection_of_lines)[:5]
         elif misspelled_words_counter == 1:
             return self.find_real_word(prefix, misspelled_word, misspelled_word_place, intersection_of_lines)
+        else:
+            return "Only one mistake is allowed"
 
     def find_perfect_match(self, prefix: str) -> tuple[int, str, int, set[int]]:
         intersection_of_lines = set()
@@ -57,24 +59,27 @@ class Searcher:
         prefix = split_user_input[:misspelled_word_place]
         suffix = split_user_input[misspelled_word_place + 1:]
 
-        fix_sentences = list()
+        fixed_sentences = list()
         for line in intersection_of_lines:
             split_sentence = self.data.get_sentence_to_file(line).get_sentence().split(" ")
 
-            first_match_index = split_sentence.index(prefix[0])
+            if len(prefix) != 0:
+                first_match_index = split_sentence.index(prefix[0])
+            else:
+                first_match_index = 0
             real_word_index = first_match_index + len(prefix)
 
             if self.check_pattern_match(first_match_index, split_sentence, prefix) and \
                     self.check_pattern_match(real_word_index + 1, split_sentence, suffix):
                 if self.fix_word(misspelled_word, split_sentence[real_word_index]):
-                    fix_sentences.append(AutoCompleteData(
+                    fixed_sentences.append(AutoCompleteData(
                         self.data.get_sentence_to_file(line).get_sentence(),
                         self.data.get_sentence_to_file(line).get_file_name(),
                         0, 0))
                 elif len(suffix) == 0:  # it means that all the words are ok but the last.
                     return self.find_complete_sentence(user_input, intersection_of_lines)[:5]
 
-        return fix_sentences[:5]
+        return fixed_sentences[:5]
 
     def check_pattern_match(self, index, complete_sentence, partial_input):
         if len(partial_input) > len(complete_sentence[index:]):
