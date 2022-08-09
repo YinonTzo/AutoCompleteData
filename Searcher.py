@@ -3,11 +3,24 @@ import Data
 
 
 class Searcher:
+    """A Searcher class. Responsible to make the search in the DB.
+
+    Attributes:
+        data (Data): The database.
+    """
 
     def __init__(self):
         self.data = Data.Data()
 
-    def get_best_k_completions(self, prefix: str) -> list[AutoCompleteData]:
+    def get_best_k_completions(self, prefix: str) -> list[AutoCompleteData] | str:
+        """
+        Manage the search. Check if there are 0, 1 or more misspelled words and
+        return the answers to user.
+        :param prefix: The user input.
+        :return: If there isn't error, it will return the 5 first completions.
+        If there is one error, it will return the five highest scored.
+        If there are more than 1 error, it will return error message.
+        """
         misspelled_words_counter, misspelled_word, misspelled_word_place, \
             intersection_of_lines, = self.find_perfect_match(prefix)
 
@@ -24,11 +37,11 @@ class Searcher:
         misspelled_word_place = 0
         misspelled_word = ''
 
-        prefix_list = prefix.lower().split(" ")
-        for i, word in enumerate(prefix_list):
-            numbers_of_lines = self.data.get_lines_from_word_to_sentence(word)
-            if numbers_of_lines:
-                intersection_of_lines = self.make_intersection(intersection_of_lines, numbers_of_lines)
+        prefix_as_list = prefix.lower().split(" ")
+        for i, word in enumerate(prefix_as_list):
+            lines_numbers = self.data.get_lines_from_word_to_sentence(word)
+            if lines_numbers:
+                intersection_of_lines = self.make_intersection(intersection_of_lines, lines_numbers)
             else:
                 misspelled_word_place = i
                 misspelled_words_counter += 1
