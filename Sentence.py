@@ -1,4 +1,3 @@
-
 class Sentence:
     """A Sentence class.
 
@@ -11,13 +10,15 @@ class Sentence:
         file_name (str): The file which hold the sentence.
     """
     def __init__(self, sentence: str, file_name: str):
-        self.sentence = sentence
-        self.file_name = file_name
+        self._sentence = sentence
+        self._file_name = file_name
 
-    def get_sentence(self):
-        return self.sentence
+    @property
+    def sentence(self):
+        return self._sentence
 
-    def get_file_name(self):
-        return self.file_name
+    @property
+    def file_name(self):
+        return self._file_name
 
 

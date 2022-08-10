@@ -1,13 +1,12 @@
-
-import Searcher
+import Controller
 
 
 def main():
-    searcher = Searcher.Searcher()
+    controller = Controller.Controller()
 
-    # prefix = "fist line" bug
+    # prefix = "second lige"
     prefix = "first line"
-    for i, completion in enumerate(searcher.get_best_k_completions(prefix)):
+    for i, completion in enumerate(controller.get_best_k_completions(prefix)):
         print(str(i) + '. ' + str(completion))
 
 
