@@ -27,7 +27,7 @@ class Editor:
 
         fixed_sentences = list()
         for line in intersection_of_lines:
-            split_sentence = self.data.get_sentence_to_file(line).get_sentence().split(" ")
+            split_sentence = self.data.get_sentence_to_file(line).sentence.split(" ")
 
             if len(prefix) != 0:
                 first_match_index = split_sentence.index(prefix[0])
@@ -39,8 +39,8 @@ class Editor:
                     self.check_pattern_match(real_word_index + 1, split_sentence, suffix):
                 if self.fix_word(misspelled_word.misspelled_word, split_sentence[real_word_index]):
                     fixed_sentences.append(AutoCompleteData(
-                        self.data.get_sentence_to_file(line).get_sentence(),
-                        self.data.get_sentence_to_file(line).get_file_name(),
+                        self.data.get_sentence_to_file(line).sentence,
+                        self.data.get_sentence_to_file(line).file_name,
                         0, 0))
                 elif len(suffix) == 0:  # it means that all the words are ok but the last.
                     return self.complete_sentence_searcher.find_complete_sentence(user_input, intersection_of_lines)

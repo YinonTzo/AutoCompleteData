@@ -4,8 +4,7 @@ import Controller
 def main():
     controller = Controller.Controller()
 
-    # prefix = "second lige"
-    prefix = "first line"
+    prefix = "first lihne"
     for i, completion in enumerate(controller.get_best_k_completions(prefix)):
         print(str(i) + '. ' + str(completion))
 
