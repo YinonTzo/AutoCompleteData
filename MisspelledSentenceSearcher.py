@@ -69,7 +69,8 @@ class MisspelledSentenceSearcher:
                         fixed_sentences.append(AutoCompleteData(
                             self.__data.get_sentence_to_file(line).sentence,
                             self.__data.get_sentence_to_file(line).file_name,
-                            0, score))
+                            self.__data.get_sentence_to_file(line).line_number,
+                            score))
                 if not edit and len(suffix) == 0:  # it means that all the words are ok but the last.
                     fixed_sentences = fixed_sentences + (self.__complete_sentence_searcher.
                                                          find_complete_sentence(user_input,

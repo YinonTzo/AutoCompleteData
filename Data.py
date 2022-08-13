@@ -20,8 +20,12 @@ class Data:
             for file in files:  # get each file within the directory and subdirectories
                 path = (os.path.abspath(os.path.join(root, file)))  # get the full path of each file
                 with open(path, encoding="utf8") as f:  # open the file
+                    line_number = 1
                     for line in f:
-                        self.__sentence_to_file.append(Sentence.Sentence(line.replace('\n', ""), file[:-4]))
+                        self.__sentence_to_file.append(Sentence.Sentence(line.replace('\n', ""),
+                                                                         file[:-4],
+                                                                         line_number))
+                        line_number += 1
                         for word in Clean_line.clean_line_from_redundant_letters(line).split(" "):
                             if word not in self.__word_to_sentence:
                                 self.__word_to_sentence[word] = set()
