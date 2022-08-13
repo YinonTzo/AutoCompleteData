@@ -1,3 +1,4 @@
+import Clean_line
 from Data import Data
 from AutoCompleteData import AutoCompleteData
 
@@ -23,7 +24,8 @@ class CompleteSentenceSearcher:
         """
         results = list()
         for line in intersection_of_lines:
-            offset = self.__data.get_sentence_to_file(line).sentence.find(prefix)
+            offset = (Clean_line.clean_line_from_redundant_letters(self.__data.get_sentence_to_file(line)
+                      .sentence)).find(prefix)
             if offset != -1:
                 results.append(AutoCompleteData(
                     self.__data.get_sentence_to_file(line).sentence,

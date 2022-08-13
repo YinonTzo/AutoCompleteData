@@ -1,4 +1,6 @@
 import os
+
+import Clean_line
 import Sentence
 
 
@@ -20,8 +22,7 @@ class Data:
                 with open(path, encoding="utf8") as f:  # open the file
                     for line in f:
                         self.__sentence_to_file.append(Sentence.Sentence(line.replace('\n', ""), file[:-4]))
-                        for word in line.replace('\n', "").split(" "):  # every word separated by space
-                            word = word.lower()
+                        for word in Clean_line.clean_line_from_redundant_letters(line).split(" "):
                             if word not in self.__word_to_sentence:
                                 self.__word_to_sentence[word] = set()
                             self.__word_to_sentence[word].add(
@@ -44,3 +45,4 @@ class Data:
         :return: A Sentence from the list.
         """
         return self.__sentence_to_file[index]
+

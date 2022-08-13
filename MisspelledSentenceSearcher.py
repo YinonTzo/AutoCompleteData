@@ -1,3 +1,4 @@
+import Clean_line
 from AddLetter import AddLetter
 from ChangeLetter import ChangeLetter
 from Data import Data
@@ -48,7 +49,8 @@ class MisspelledSentenceSearcher:
 
         fixed_sentences = list()
         for line in intersection_of_lines:
-            split_sentence = self.__data.get_sentence_to_file(line).sentence.split(" ")
+            split_sentence = Clean_line.clean_line_from_redundant_letters(self.__data.get_sentence_to_file(line).
+                                                                          sentence).split(" ")
 
             first_match_index = self.__find_first_match(split_sentence, prefix)
             real_word_index = first_match_index + len(prefix)

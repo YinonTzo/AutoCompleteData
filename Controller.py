@@ -1,4 +1,4 @@
-import AutoCompleteData
+from AutoCompleteData import AutoCompleteData
 import Data
 import CompleteSentenceSearcher
 import IntersectionMaker
@@ -27,7 +27,9 @@ class Controller:
 
     def get_best_k_completions(self, prefix: str) -> list[AutoCompleteData] | str:
         """
-        Check if there are 0, 1 or more misspelled words and
+        Check if there are 0, 1 or more misspelled words.
+        In case of more than 1 misspelled word, it will return the intersection
+        of the words that are correct.
         return the answers to user.
         :param prefix: The user input.
         :return: If there isn't error, it will return the 5 first completions.
@@ -44,4 +46,10 @@ class Controller:
                                                                       misspelled_words[0],
                                                                       intersection_of_lines)[:5]
         else:
-            return "Only one mistake is allowed"
+            results = list()
+            for line in intersection_of_lines:
+                results.append(AutoCompleteData(
+                    self.__data.get_sentence_to_file(line).sentence,
+                    self.__data.get_sentence_to_file(line).file_name,
+                    0, len(prefix)))
+            return results
