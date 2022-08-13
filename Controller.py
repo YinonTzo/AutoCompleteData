@@ -2,7 +2,7 @@ import AutoCompleteData
 import Data
 import CompleteSentenceSearcher
 import IntersectionMaker
-import Editor
+import MisspelledSentenceSearcher
 
 
 class Controller:
@@ -14,7 +14,7 @@ class Controller:
         intersection_maker (IntersectionMaker): Responsible on the first step in the algorithm.
         complete_sentence_searcher (CompleteSentenceSearcher): If there isn't misspelled word,
         this object will look for the sentence in the lines that returned from intersection maker.
-        editor (Editor): If there is one mistake, this object will try to fix it and look for
+        editor (MisspelledSentenceSearcher): If there is one mistake, this object will try to fix it and look for
         fits completions.
     """
 
@@ -22,7 +22,8 @@ class Controller:
         self.__data = Data.Data()
         self.__intersection_maker = IntersectionMaker.IntersectionMaker(self.__data)
         self.__complete_sentence_searcher = CompleteSentenceSearcher.CompleteSentenceSearcher(self.__data)
-        self.__editor = Editor.Editor(self.__data, self.__complete_sentence_searcher)
+        self.__misspelled_sentence_searcher = MisspelledSentenceSearcher.\
+            MisspelledSentenceSearcher(self.__data, self.__complete_sentence_searcher)
 
     def get_best_k_completions(self, prefix: str) -> list[AutoCompleteData] | str:
         """
@@ -39,8 +40,8 @@ class Controller:
             return self.__complete_sentence_searcher.find_complete_sentence(prefix,
                                                                             intersection_of_lines)[:5]
         elif len(misspelled_words) == 1:
-            return self.__editor.find_real_word(prefix,
-                                                misspelled_words[0],
-                                                intersection_of_lines)[:5]
+            return self.__misspelled_sentence_searcher.edit_sentences(prefix,
+                                                                      misspelled_words[0],
+                                                                      intersection_of_lines)[:5]
         else:
             return "Only one mistake is allowed"
