@@ -28,7 +28,7 @@ class CompleteSentenceSearcher:
                 results.append(AutoCompleteData(
                     self.__data.get_sentence_to_file(line).sentence,
                     self.__data.get_sentence_to_file(line).file_name,
-                    offset, 0))
+                    offset, len(prefix)))
         return results
 
 

@@ -32,7 +32,7 @@ class MisspelledSentenceSearcher:
 
     def edit_sentences(self, user_input: str,
                        misspelled_word: MisspelledWordDetails,
-                       intersection_of_lines: set[int]) -> list[AutoCompleteData]:
+                       intersection_of_lines: set[int]):
         """
         Split the sentence around the misspelled word,
         check for each line in the intersection if the prefix and the suffix are exists there.
@@ -69,8 +69,11 @@ class MisspelledSentenceSearcher:
                             self.__data.get_sentence_to_file(line).file_name,
                             0, score))
                 if not edit and len(suffix) == 0:  # it means that all the words are ok but the last.
-                    return self.__complete_sentence_searcher.\
-                        find_complete_sentence(user_input, intersection_of_lines)
+                    fixed_sentences = fixed_sentences + (self.__complete_sentence_searcher.
+                                                         find_complete_sentence(user_input,
+                                                                                intersection_of_lines))
+
+        fixed_sentences.sort(key=lambda auto_complete: auto_complete.score)
         return fixed_sentences
 
     @staticmethod
@@ -120,3 +123,4 @@ class MisspelledSentenceSearcher:
             return split_sentence.index(prefix[0])
         else:
             return 0
+
