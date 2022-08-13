@@ -12,7 +12,6 @@ class Data:
     """
 
     def __init__(self):
-        print("Data init")
         self.__word_to_sentence = dict()
         self.__sentence_to_file = list()
         for root, dirs, files in os.walk('stam'):
