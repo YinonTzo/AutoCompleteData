@@ -41,11 +41,11 @@ class Controller:
 
         if len(misspelled_words) == 0:
             return self.__complete_sentence_searcher.find_complete_sentence(prefix,
-                                                                            intersection_of_lines)[:5]
+                                                                            intersection_of_lines)
         elif len(misspelled_words) == 1:
             return self.__misspelled_sentence_searcher.edit_sentences(prefix,
                                                                       misspelled_words[0],
-                                                                      intersection_of_lines)[:5]
+                                                                      intersection_of_lines)
         else:
             results = list()
             for line in intersection_of_lines:

@@ -9,7 +9,7 @@ def main():
     prefix = Clean_line.clean_line_from_redundant_letters(input())
 
     while prefix != "finish":
-        for i, completion in enumerate(controller.get_best_k_completions(prefix)):
+        for i, completion in enumerate(controller.get_best_k_completions(prefix)[:5]):
             print(str(i) + '. ' + str(completion))
         print("Please insert your input...")
         prefix = Clean_line.clean_line_from_redundant_letters(input())
