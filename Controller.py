@@ -19,6 +19,7 @@ class Controller:
     """
 
     def __init__(self):
+        print("Load files...")
         self.__data = Data.Data()
         self.__intersection_maker = IntersectionMaker.IntersectionMaker(self.__data)
         self.__complete_sentence_searcher = CompleteSentenceSearcher.CompleteSentenceSearcher(self.__data)

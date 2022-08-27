@@ -53,7 +53,9 @@ class MisspelledSentenceSearcher:
                                                                           sentence).split(" ")
 
             first_match_index = self.__find_first_match(split_sentence, prefix)
-            real_word_index = first_match_index + len(prefix)
+            real_word_index = len(prefix) + first_match_index
+            if real_word_index >= len(split_sentence):  # It means that the line ends
+                continue
 
             if self.__check_pattern_match(first_match_index, split_sentence, prefix) and \
                     self.__check_pattern_match(real_word_index + 1, split_sentence, suffix):
@@ -71,6 +73,7 @@ class MisspelledSentenceSearcher:
                             self.__data.get_sentence_to_file(line).file_name,
                             self.__data.get_sentence_to_file(line).line_number,
                             score))
+                        break
                 if not edit and len(suffix) == 0:  # it means that all the words are ok but the last.
                     fixed_sentences = fixed_sentences + (self.__complete_sentence_searcher.
                                                          find_complete_sentence(user_input,
