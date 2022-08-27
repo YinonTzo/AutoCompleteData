@@ -17,13 +17,59 @@ similar the real sentence from the user's input.
 The project was planned and mentored by Google employs.
 </p>
 
-<h1>Data Structure used</h1>
-<p>
-Dictionary:
+<h1>The algorithm</h1>
+<h3>Offline</h3>
+<p>The program reads the Archive, and saves it in two data structure.<br>
+The first data structure is a list of all sentences (and their details like row number and file name.)<br>
+The second data structure is a dict of word and the row numbers where it in. The key is a str and the value is a set.<br>
+The offline starts with output of: "Load files".</p>
 
+<h3>Online</h3>
+<p>
+Now you need to see on your terminal "Please insert your input...". <br>
+When the user inserts some input, the program splits it to words. For each word
+the program checks if the word exists in the dict of the words, if so, the program takes the relevant lines from the dict
+and make the intersection of all the lines that hold
+the all words.<br>
+If there is one mistake, the program will try to fix it. 
+Then, the program will go throw over the lines from the intersection and tries to find
+the complete user input in the lines.</p>
+
+<h1>Space & Time complexity</h1>
+<p>
+The offline go over the Archive and saves each word 2 times, so it takes o(w) space and o(n) Time.
+Where w is the number of words and n is the number of lines. <br>
+The online goes throw over the user input, and for each word makes intersection for all the lines that hold this word.
+Each intersection runs in O(min(old set, new set)) where old set is the intersections of all the lines until now,
+and new set is the lines that hold the new word.
+So it takes o(n(min(old set, new set))) where n is the length of the user input.
 </p>
 
 <h1>Execution</h1>
-<p>1. Please place the Data Archive in a folder named 'resources'
-and run the main.py file using regular configuration.
-</p>
+<ol>
+<li>Run the main.py file using regular configuration.</li>
+<li>Wait to message "Please insert your input..."</li>
+<li>insert your input.</li>
+<li>If you want to finish, type "finish".</li>
+</ol>
+
+<h1>Examples</h1>
+<ol>
+<li>
+Load files...
+Please insert your input...
+</li>
+<li>input: "understanding of how Kubernetes"<br>
+    output: "0. understanding of how Kubernetes works. (Concepts 8)"<br> 
+</li>
+<li>input: "understanding of how Kubrnetes"<br> 
+    output: "0. understanding of how Kubernetes works. (Concepts 8)"<br> 
+</li>
+<li> input: "understanding of how Kubernetegs"<br> 
+     output: "0. understanding of how Kubernetes works. (Concepts 8)"<br> 
+</li>
+<li>
+ input: "finish" <br>
+ output: "by" <br>
+</li>
+</ol>
