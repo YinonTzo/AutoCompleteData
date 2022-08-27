@@ -73,6 +73,7 @@ class MisspelledSentenceSearcher:
                             self.__data.get_sentence_to_file(line).file_name,
                             self.__data.get_sentence_to_file(line).line_number,
                             score))
+                        break
                 if not edit and len(suffix) == 0:  # it means that all the words are ok but the last.
                     fixed_sentences = fixed_sentences + (self.__complete_sentence_searcher.
                                                          find_complete_sentence(user_input,
