@@ -15,7 +15,7 @@ class Data:
     def __init__(self):
         self.__word_to_sentence = dict()
         self.__sentence_to_file = list()
-        for root, dirs, files in os.walk('stam'):
+        for root, dirs, files in os.walk('Archive'):
             for file in files:  # get each file within the directory and subdirectories
                 path = (os.path.abspath(os.path.join(root, file)))  # get the full path of each file
                 with open(path, encoding="utf8") as f:  # open the file

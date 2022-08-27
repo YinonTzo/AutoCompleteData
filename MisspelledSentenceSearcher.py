@@ -53,7 +53,9 @@ class MisspelledSentenceSearcher:
                                                                           sentence).split(" ")
 
             first_match_index = self.__find_first_match(split_sentence, prefix)
-            real_word_index = first_match_index + len(prefix)
+            real_word_index = len(prefix) + first_match_index
+            if real_word_index >= len(split_sentence):  # It means that the line ends
+                continue
 
             if self.__check_pattern_match(first_match_index, split_sentence, prefix) and \
                     self.__check_pattern_match(real_word_index + 1, split_sentence, suffix):
