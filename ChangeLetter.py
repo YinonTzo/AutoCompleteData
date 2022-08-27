@@ -15,6 +15,9 @@ class ChangeLetter(Editor):
         :param real_word: A possible word from the database.
         :return: The edit index or -1 if there isn't any edit.
         """
+        if len(misspelled_word) != len(real_word):
+            return -1
+
         for i in range(0, len(misspelled_word)):
             if misspelled_word[:i] == real_word[:i] and \
                     misspelled_word[i + 1:] == real_word[i + 1:]:
