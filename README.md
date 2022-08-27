@@ -1,10 +1,6 @@
 <h1>Google Sentence auto complete project</h1>
-<h3>By Yinon Tzumi, Amit Ein-Dor, Orel Aviad</h3>
+<h3>By Yinon Tzomi, Amit Ein-Dor, Orel Aviad</h3>
 
-<h1>Execution</h1>
-<p>1. Please place the Data Archive in a folder named 'resources'
-and run the main.py file using regular configuration.
-</p>
 
 <h1>Description</h1>
 <p>
@@ -25,4 +21,9 @@ The project was planned and mentored by Google employs.
 <p>
 Dictionary:
 
+</p>
+
+<h1>Execution</h1>
+<p>1. Please place the Data Archive in a folder named 'resources'
+and run the main.py file using regular configuration.
 </p>
